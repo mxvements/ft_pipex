@@ -96,10 +96,7 @@ At 42 School, it is expected that almost every project is written in accordance 
 ```
 ## Aknowledgments
 
-+ [MiniLibX Documentation](https://harm-smits.github.io/42docs/libs/minilibx/introduction.html)
-+ [MannBell blog about the project](https://m4nnb3ll.medium.com/fil-de-fer-fdf-the-first-graphical-project-at-42-the-network-5cce69203448)
-+ [](https://paulbourke.net/geometry/rotate/)
-+ [Abdul Bari video about the Bresenham's algorithm](https://www.youtube.com/watch?v=RGB-wlatStc)
++ [CodeVault's list on Unix Processes in C](https://www.youtube.com/watch?v=cex9XrZCU14&list=PLfqABt5AS4FkW5mOn2Tn9ZZLLDwA3kZUY)
 
 # License
 [MIT License](https://github.com/mxvements/ft_license/blob/main/LICENSE.txt)
