@@ -35,6 +35,6 @@ int	main(void)
 		the calling process, an error has ocurred; the return value will be -1 
 		and the global variable errno is set to indicate the error.
 	*/
-	execve();
+	execve("path", {"cmd1", "-l", "-a", NULL}, "env");
 	return (0);
 }

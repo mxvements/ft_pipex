@@ -18,14 +18,17 @@
 # include <unistd.h>
 # include <sys/wait.h>
 # include <errno.h>
-# define STDOUT_FILENO
-# define STDINT_FILEIN
+# define READ_END		0
+# define WRITE_END		1
 
 typedef struct s_data
 {
 	char	**env;
 	char	**argv;
 	int		id[2];
+	int		fd_pipe[2];
+	int		fd_in;
+	int		fd_out;
 }	t_data;
 
 #endif

@@ -12,20 +12,57 @@
 
 #include "pipex.h"
 
-void	firstcommand(t_data *data)
+/*void	firstcommand(t_data *data)
 {
-	data->id[0] = fork();
+
 }
 
 void	secondcommand(t_data *data)
 {
-	data->id[1] = fork();
-}
+
+}*/
 
 void	pipex(t_data *data)
 {
-	firstcommand(data);
-	secondcommand(data);
+	/*	1sr fork()
+		2nd	pipe()
+		childs will inherit parent's fd's
+	*/
+	pipe(data->fd_pipe);
+	data->id[0] = fork();
+	if (data->id[0] == 0) /* child process - cmd1 */
+	{
+		close(data->fd_pipe[READ_END]); //first command writes on the pipe fd
+		dup2(data->fd_pipe[WRITE_END], STDOUT_FILENO);
+		close(data->fd_pipe[WRITE_END]);
+		/*	execve
+			(1) env path 
+			(2) char **args, {cm1, argv1, argv2, NULL} params of the program
+			(3) env, passed with the main
+		*/
+		char *argvchild2[] = {"/bin/ls", "-l", NULL};
+		execve("/bin/ls", argvchild2, data->env);
+	}
+	else /* parent process -> does another child for cmd2*/
+	{	
+		data->id[1] = fork();
+		if (data->id[1] == 0) /* child process - cmd2 */
+		{
+			//data->fd_out = open();
+			close(data->fd_pipe[WRITE_END]);
+			dup2(data->fd_pipe[READ_END], STDIN_FILENO);
+			close(data->fd_pipe[READ_END]);
+			//execve
+			char *argvchild2[] = {"/bin/cat", "-e", NULL};
+			execve("/bin/cat", argvchild2, data->env);
+		}
+		else
+		{
+			close(data->fd_pipe[WRITE_END]);
+			close(data->fd_pipe[READ_END]);
+		}
+		
+	}
 }
 
 static t_data	*initdata(void)
@@ -48,7 +85,7 @@ int	main(int argc, char **argv, char **env)
 		printf("Usage: ./pipex file1 cmd1 cmd2 file2");
 	if (argc == 5)
 	{
-		data = initdata();
+		data = initdata(); //bzero
 		if (!data)
 			return (0); //ERROR
 		data->env = env;
