@@ -12,68 +12,80 @@
 
 #include "pipex.h"
 
-/*void	firstcommand(t_data *data)
+void	firstcommand(t_data *data)
 {
+	char	*path;
+	printf("first command, infile path: %s\n", data->infile->path);
+	path = getenv("PATH");
+	printf("path env: %s\n", path);
 
+	close(data->fd_pipe[READ_END]); //first command writes on the pipe fd
+	dup2(data->fd_pipe[WRITE_END], STDOUT_FILENO);
+	close(data->fd_pipe[WRITE_END]);
+	/*	open file inside child */
+	data->infile->fd = open(data->infile->path, O_RDONLY);
+	dup2(STDOUT_FILENO, data->infile->fd);
+	/*	execve
+		(1) env path 
+		(2) char **args, {cm1, argv1, argv2, NULL} params of the program
+		(3) env, passed with the main
+	*/
+	char *argvchild2[] = {"/bin/ls", "-l", NULL};
+	execve("/bin/ls", argvchild2, data->env);
 }
 
 void	secondcommand(t_data *data)
 {
+	printf("second command, outfile path: %s\n", data->outfile->path);
 
-}*/
+	close(data->fd_pipe[WRITE_END]);
+	dup2(data->fd_pipe[READ_END], STDIN_FILENO);
+	close(data->fd_pipe[READ_END]);
+	//open outputfile
+	data->outfile->fd = open(data->outfile->path, O_RDONLY);
+	dup2(STDIN_FILENO, data->outfile->fd);
+	//execve
+	char *argvchild2[] = {"/bin/cat", "-e", NULL};
+	execve("/bin/cat", argvchild2, data->env);
+}
 
 void	pipex(t_data *data)
 {
-	/*	1sr fork()
-		2nd	pipe()
-		childs will inherit parent's fd's
-	*/
 	pipe(data->fd_pipe);
 	data->id[0] = fork();
-	if (data->id[0] == 0) /* child process - cmd1 */
-	{
-		close(data->fd_pipe[READ_END]); //first command writes on the pipe fd
-		dup2(data->fd_pipe[WRITE_END], STDOUT_FILENO);
-		close(data->fd_pipe[WRITE_END]);
-		/*	execve
-			(1) env path 
-			(2) char **args, {cm1, argv1, argv2, NULL} params of the program
-			(3) env, passed with the main
-		*/
-		char *argvchild2[] = {"/bin/ls", "-l", NULL};
-		execve("/bin/ls", argvchild2, data->env);
-	}
-	else /* parent process -> does another child for cmd2*/
+	if (data->id[0] == 0)
+		firstcommand(data);
+	else
 	{	
 		data->id[1] = fork();
-		if (data->id[1] == 0) /* child process - cmd2 */
-		{
-			//data->fd_out = open();
-			close(data->fd_pipe[WRITE_END]);
-			dup2(data->fd_pipe[READ_END], STDIN_FILENO);
-			close(data->fd_pipe[READ_END]);
-			//execve
-			char *argvchild2[] = {"/bin/cat", "-e", NULL};
-			execve("/bin/cat", argvchild2, data->env);
-		}
+		if (data->id[1] == 0)
+			secondcommand(data);
 		else
 		{
 			close(data->fd_pipe[WRITE_END]);
 			close(data->fd_pipe[READ_END]);
 		}
-		
 	}
 }
 
-static t_data	*initdata(void)
+static t_data	*initdata(char **argv, char **env)
 {
 	t_data	*data;
 
 	data = (t_data *)malloc(sizeof(t_data));
 	if (!data)
 		return NULL;
-	data->env = NULL;
-	data->argv = NULL;
+	data->infile = (t_file *)malloc(sizeof(t_file));
+	if (!(data->infile))
+		return (free(data), NULL);
+	data->outfile = (t_file *)malloc(sizeof(t_file));
+	if (!(data->outfile))
+		return (free(data->infile), free(data), NULL);
+	data->env = env;
+	data->cmd1 = argv[2]; //TEMP
+	data->cmd2 = argv[3]; //TEMP
+	data->infile->path = argv[1];
+	data->outfile->path = argv[4];
 	return (data);
 }
 
@@ -85,11 +97,10 @@ int	main(int argc, char **argv, char **env)
 		printf("Usage: ./pipex file1 cmd1 cmd2 file2");
 	if (argc == 5)
 	{
-		data = initdata(); //bzero
+		data = initdata(argv, env); //bzero
 		if (!data)
 			return (0); //ERROR
-		data->env = env;
-		data->argv = argv;
+		printf("in main, path[0]: %s\n", env[2]); //look this way for the path env
 		pipex(data);
 	}
 	return (0);

@@ -16,19 +16,27 @@
 # include <string.h>
 # include <stdlib.h>
 # include <unistd.h>
+ #include <fcntl.h>
 # include <sys/wait.h>
 # include <errno.h>
 # define READ_END		0
 # define WRITE_END		1
 
+typedef struct s_file
+{
+	int		fd;
+	char	*path;
+}	t_file;
+
 typedef struct s_data
 {
-	char	**env;
-	char	**argv;
 	int		id[2];
 	int		fd_pipe[2];
-	int		fd_in;
-	int		fd_out;
+	char	**env;
+	char	*cmd1;
+	char	*cmd2;
+	t_file	*infile;
+	t_file	*outfile;
 }	t_data;
 
 #endif
