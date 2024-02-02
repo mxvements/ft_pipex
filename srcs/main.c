@@ -14,10 +14,7 @@
 
 void	firstcommand(t_data *data)
 {
-	char	*path;
 	printf("first command, infile path: %s\n", data->infile->path);
-	path = getenv("PATH");
-	printf("path env: %s\n", path);
 
 	close(data->fd_pipe[READ_END]); //first command writes on the pipe fd
 	dup2(data->fd_pipe[WRITE_END], STDOUT_FILENO);
@@ -68,27 +65,6 @@ void	pipex(t_data *data)
 	}
 }
 
-static t_data	*initdata(char **argv, char **env)
-{
-	t_data	*data;
-
-	data = (t_data *)malloc(sizeof(t_data));
-	if (!data)
-		return NULL;
-	data->infile = (t_file *)malloc(sizeof(t_file));
-	if (!(data->infile))
-		return (free(data), NULL);
-	data->outfile = (t_file *)malloc(sizeof(t_file));
-	if (!(data->outfile))
-		return (free(data->infile), free(data), NULL);
-	data->env = env;
-	data->cmd1 = argv[2]; //TEMP
-	data->cmd2 = argv[3]; //TEMP
-	data->infile->path = argv[1];
-	data->outfile->path = argv[4];
-	return (data);
-}
-
 int	main(int argc, char **argv, char **env)
 {
 	t_data	*data;
@@ -97,10 +73,9 @@ int	main(int argc, char **argv, char **env)
 		printf("Usage: ./pipex file1 cmd1 cmd2 file2");
 	if (argc == 5)
 	{
-		data = initdata(argv, env); //bzero
+		data = init_data(argv, env); //bzero
 		if (!data)
 			return (0); //ERROR
-		printf("in main, path[0]: %s\n", env[2]); //look this way for the path env
 		pipex(data);
 	}
 	return (0);
