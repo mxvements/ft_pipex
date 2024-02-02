@@ -15,9 +15,8 @@ PIPEX_DIR=	./srcs/
 SRCS_FILES=	main.c
 SRCS=		$(addprefix $(PIPEX_DIR), $(SRCS_FILES))
 ################################
-
-#add libft
-
+LIBFT_DIR=	./libft/
+LIBFT=		./libft/libft.a
 ###############################
 OBJS_DIR=	./objs/
 OBJS=		$(SRCS:$(PIPEX_DIR)%.c=$(OBJS_DIR)%.o)
@@ -26,9 +25,11 @@ OBJS=		$(SRCS:$(PIPEX_DIR)%.c=$(OBJS_DIR)%.o)
 all: $(NAME)
 
 $(NAME): $(OBJS)
+	@echo "\n$(BLUE)Compiling libft$(CLEAR)\n"
+	make extra -C $(LIBFT_DIR)
 	@echo "\n$(BLUE)Compiling pipex$(CLEAR)\n"
 	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
-	@echo "$(GREEN)pipex -> OK\n$(CLEAR)\n"
+	@echo "$(GREEN)\npipex -> OK\n$(CLEAR)\n"
 	@echo "$(YELLOW)\tUsage: ./pipex file1 cmd1 cmd2 file2$(CLEAR)\n"
 
 $(OBJS_DIR)%.o: $(PIPEX_DIR)%.c
@@ -39,9 +40,11 @@ sanitize: fclean $(NAME)
 	$(CC) $(CFLAGS) $(CSANITIZE) $(OBJS) -o $(NAME)
 
 clean:
+	make clean -C $(LIBFT_DIR)
 	rm -rf $(OBJS_DIR)
 
 fclean: clean
+	make fclean -C $(LIBFT_DIR)
 	rm -rf $(NAME)
 
 re: fclean all
