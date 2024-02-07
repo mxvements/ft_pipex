@@ -69,6 +69,7 @@ int	main(int argc, char **argv, char **env)
 {
 	t_data	*data;
 
+	//infile.txt "ls -l" "cat -e" outfile.txt
 	if (argc != 5)
 		printf("Usage: ./pipex file1 cmd1 cmd2 file2");
 	if (argc == 5)
