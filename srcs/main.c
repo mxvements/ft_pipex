@@ -14,6 +14,7 @@
 
 void	firstcommand(t_data *data)
 {
+	printf("first command, cmd path: %s\n", data->cmd1_args[0]);
 	printf("first command, infile path: %s\n", data->infile->path);
 
 	close(data->fd_pipe[READ_END]); //first command writes on the pipe fd
@@ -33,7 +34,8 @@ void	firstcommand(t_data *data)
 
 void	secondcommand(t_data *data)
 {
-	printf("second command, outfile path: %s\n", data->outfile->path);
+	printf("second command, outfile path: %s\n", data->cmd2_args[0]);
+	printf("first command, outfile path: %s\n", data->outfile->path);
 
 	close(data->fd_pipe[WRITE_END]);
 	dup2(data->fd_pipe[READ_END], STDIN_FILENO);
@@ -53,7 +55,7 @@ void	pipex(t_data *data)
 	if (data->id[0] == 0)
 		firstcommand(data);
 	else
-	{	
+	{
 		data->id[1] = fork();
 		if (data->id[1] == 0)
 			secondcommand(data);
@@ -63,6 +65,8 @@ void	pipex(t_data *data)
 			close(data->fd_pipe[READ_END]);
 		}
 	}
+	//wait pid
+	//salir con el resutlado del ultimo comando ejecutado
 }
 
 int	main(int argc, char **argv, char **env)

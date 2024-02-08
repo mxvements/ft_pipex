@@ -12,56 +12,16 @@
 
 #include "pipex.h"
 
-void	*free_data(t_data *data)
+char	**init_cmd_args(t_data *data, char **cmd_args, char *command)
 {
-	if (data->cmd2)
-		free(data->cmd2);
-	if (data->cmd1)
-		free(data->cmd1);
-	if (data->outfile)
-		free(data->outfile);
-	if (data->infile)
-		free(data->infile);
-	if (data->paths) //DOUBLE PTR FREE
-		free(data->paths);
-	free(data);
-	data = NULL;
-	return (data);
-}
-
-t_file	*init_file_struct(t_file *file)
-{
-	file = (t_file *)malloc(sizeof(t_file));
-	if (!file)
+	cmd_args = ft_split(command, ' ');
+	if (!cmd_args)
 		return (NULL);
-	return (file);
-}
-
-t_cmd	*init_cmd_struct(t_cmd *cmd, t_data *data, char *command)
-{
-	char	*full_path;
-
-	cmd = (t_cmd *)malloc(sizeof(t_cmd));
-	if (!cmd)
+	cmd_args = check_cmd_full_path(data, cmd_args);
+	if (!cmd_args)
 		return (NULL);
-	while (*(data->paths))
-	{
-		full_path = ft_strjoin(*data->paths, command);
-		if (!full_path)
-		{
-			free(cmd);
-			return (NULL);
-		}
-		if (access(full_path, F_OK) == 0)
-		{
-			cmd->path = full_path;
-			printf("path: %s\n", cmd->path);
-			break;			
-		}
-		free(full_path);
-		(data->paths)++;
-	}
-	return (cmd);
+	//printf("full path: %s \n", *cmd_args); //TO CHECK
+	return (cmd_args);
 }
 
 t_data	*init_data_struct(t_data *data)
@@ -71,11 +31,19 @@ t_data	*init_data_struct(t_data *data)
 		return (NULL);
 	data->env = NULL;
 	data->paths = NULL;
-	data->cmd1 = NULL;
-	data->cmd2 = NULL;
+	data->cmd1_args = NULL;
+	data->cmd2_args = NULL;
 	data->infile = NULL;
 	data->outfile = NULL;
 	return (data);
+}
+t_file	*init_file_struct(t_file *file, char *name)
+{
+	file = (t_file *)malloc(sizeof(t_file));
+	if (!file)
+		return (NULL);
+	file->path = name;
+	return (file);	
 }
 
 t_data	*init_data(char **argv, char **env)
@@ -90,18 +58,18 @@ t_data	*init_data(char **argv, char **env)
 	data->paths = get_paths(env);
 	if (!data->paths)
 		return (free_data(data));
-	arrstr_print(data->paths); //TO CHECK
-	data->infile = init_file_struct(data->infile); //argv[1]
+	//arrstr_print(data->paths); //TO CHECK
+	data->cmd1_args = init_cmd_args(data, data->cmd1_args, argv[2]);
+	if (!data->cmd1_args)
+		return (free_data(data));
+	data->cmd2_args = init_cmd_args(data, data->cmd2_args, argv[3]);
+	if (!data->cmd1_args)
+		return (free_data(data));
+	data->infile = init_file_struct(data->infile, argv[1]);
 	if (!(data->infile))
 		return (free_data(data));
-	data->outfile = init_file_struct(data->outfile); //argv[4]
+	data->outfile = init_file_struct(data->outfile, argv[4]);
 	if (!(data->outfile))
-		return (free_data(data));
-	data->cmd1 = init_cmd_struct(data->cmd1, data, argv[2]); //argv[2]
-	if (!data->cmd1)
-		return (free_data(data));
-	data->cmd2 = init_cmd_struct(data->cmd2, data, argv[3]); //argv[3]
-	if (!data->cmd2)
 		return (free_data(data));
 	return (data);
 }

@@ -15,6 +15,7 @@ PIPEX_DIR=	./srcs/
 SRCS_FILES=	main.c \
 			initdata.c \
 			path.c \
+			free.c \
 			arrstr_aux.c
 SRCS=		$(addprefix $(PIPEX_DIR), $(SRCS_FILES))
 ################################

@@ -33,12 +33,6 @@
 # define READ_END		0
 # define WRITE_END		1
 
-typedef struct s_cmd
-{
-	char	*path;
-	char	**args;
-}	t_cmd;
-
 typedef struct s_file
 {
 	char	*path;
@@ -51,17 +45,23 @@ typedef struct s_data
 	int		fd_pipe[2];
 	char	**env;
 	char	**paths;
-	t_cmd	*cmd1;
-	t_cmd	*cmd2;
+	char	**cmd1_args;
+	char	**cmd2_args;
 	t_file	*infile;
 	t_file	*outfile;
 }	t_data;
 
 /* DATA STRUCT FUNCTS */
 t_data	*init_data(char **argv, char **env);
+t_file	*init_file_struct(t_file *file, char *name);
+t_data	*init_data_struct(t_data *data);
+char	**init_cmd_args(t_data *data, char **cmd_args, char *command);
+void	*free_dblstrarr(char **strarr);
 void	*free_data(t_data *data);
 /* PATH */
 char	**get_paths(char **env);
+char	**check_cmd_full_path(t_data *data, char **cmd_args);
+/* FREE */
 /* STR ARRAYS */
 void	arrstr_print(char **arr);
 #endif
