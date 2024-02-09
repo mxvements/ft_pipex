@@ -24,8 +24,10 @@ char	**init_cmd_args(t_data *data, char **cmd_args, char *command)
 	return (cmd_args);
 }
 
-t_data	*init_data_struct(t_data *data)
+/*t_data	*init_data_struct(void)
 {
+	t_data	*data;
+
 	data = (t_data *)malloc(sizeof(t_data));
 	if (!data)
 		return (NULL);
@@ -36,7 +38,7 @@ t_data	*init_data_struct(t_data *data)
 	data->infile = NULL;
 	data->outfile = NULL;
 	return (data);
-}
+}*/
 t_file	*init_file_struct(t_file *file, char *name)
 {
 	file = (t_file *)malloc(sizeof(t_file));
@@ -50,8 +52,7 @@ t_data	*init_data(char **argv, char **env)
 {
 	t_data	*data;
 
-	data = NULL;
-	data = init_data_struct(data);
+	data = ft_calloc(1, sizeof(t_data));
 	if (!data)
 		return (NULL);
 	data->env = env;

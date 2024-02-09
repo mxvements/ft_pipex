@@ -51,17 +51,21 @@ typedef struct s_data
 	t_file	*outfile;
 }	t_data;
 
-/* DATA STRUCT FUNCTS */
+/* PIPEX  EXEC */
+void	pipex(t_data *data);
+void	secondcommand(t_data *data);
+void	firstcommand(t_data *data);
+/* STRUCT FUNCTS */
 t_data	*init_data(char **argv, char **env);
 t_file	*init_file_struct(t_file *file, char *name);
-t_data	*init_data_struct(t_data *data);
+//t_data	*init_data_struct(t_data *data);
 char	**init_cmd_args(t_data *data, char **cmd_args, char *command);
+/* FREE */
 void	*free_dblstrarr(char **strarr);
 void	*free_data(t_data *data);
 /* PATH */
 char	**get_paths(char **env);
 char	**check_cmd_full_path(t_data *data, char **cmd_args);
-/* FREE */
 /* STR ARRAYS */
 void	arrstr_print(char **arr);
 #endif

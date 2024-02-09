@@ -18,6 +18,7 @@ char	**get_paths(char **env)
 	char	*varenv;
 	int		equals_idx;
 	char	**paths;
+	char	*tmp;
 
 	i = 0;
 	while (ft_strncmp(env[i], "PATH=", 5) != 0)
@@ -27,21 +28,27 @@ char	**get_paths(char **env)
 	paths = ft_split((varenv + equals_idx), ':');
 	if (!paths)
 		return (NULL);
+	i = 0;
+	while (paths[i])
+	{
+		tmp = paths[i];
+		paths[i] = ft_strjoin(tmp, "/"); //TODO: this is not working
+		if (!(paths[i]))
+			return (NULL);
+		free(tmp);
+		i++;
+	}
 	return (paths);
 }
 
 char	**check_cmd_full_path(t_data *data, char **cmd_args)
 {
 	char	*full_path;
-	char	*tmp;
+	//char	*tmp;
 
+	//TODO: exit si el path del comando no existe 127
 	if (access(cmd_args[0], F_OK) == 0)
 		return (cmd_args);
-	tmp = cmd_args[0];
-	cmd_args[0] = ft_strjoin("/", tmp);
-	if (!(cmd_args[0]))
-		return (NULL);
-	free(tmp);
 	while (*(data->paths))
 	{
 		full_path = ft_strjoin(*data->paths, cmd_args[0]);
@@ -49,6 +56,7 @@ char	**check_cmd_full_path(t_data *data, char **cmd_args)
 			return (NULL);
 		if (access(full_path, F_OK) == 0)
 		{
+			free(cmd_args[0]);
 			cmd_args[0] = full_path;
 			break;
 		}
@@ -57,3 +65,8 @@ char	**check_cmd_full_path(t_data *data, char **cmd_args)
 	}
 	return (cmd_args);
 }
+
+/* PIPE
+	primero chequea el infile y despues el path del comando
+	primero mira sie el comando existe
+*/
