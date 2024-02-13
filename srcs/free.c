@@ -20,7 +20,7 @@ void	*free_dblstrarr(char **strarr)
 		*strarr = NULL;
 		strarr++;
 	}
-	free(strarr);
+	//free(strarr);
 	return (NULL);
 }
 

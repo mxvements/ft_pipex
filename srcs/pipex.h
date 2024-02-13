@@ -63,6 +63,7 @@ char	**init_cmd_args(t_data *data, char **cmd_args, char *command);
 /* FREE */
 void	*free_dblstrarr(char **strarr);
 void	*free_data(t_data *data);
+void	error_message(void);
 /* PATH */
 char	**get_paths(char **env);
 char	**check_cmd_full_path(t_data *data, char **cmd_args);
