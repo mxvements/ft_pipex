@@ -27,3 +27,12 @@ void	arrstr_print(char **arr)
 	ft_putstr_fd(ANSICOLOR_RESET, 1);
 }
 
+int	arrstr_len(char **arr)
+{
+	int	i;
+
+	i = 0;
+	while (arr[i] != NULL)
+		i++;
+	return (i);
+}

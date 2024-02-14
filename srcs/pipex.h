@@ -16,7 +16,7 @@
 # include <string.h>
 # include <stdlib.h>
 # include <unistd.h>
- #include <fcntl.h>
+# include <fcntl.h>
 # include <sys/wait.h>
 # include <errno.h>
 # include "../libft/libft.h"
@@ -61,12 +61,13 @@ t_file	*init_file_struct(t_file *file, char *name);
 //t_data	*init_data_struct(t_data *data);
 char	**init_cmd_args(t_data *data, char **cmd_args, char *command);
 /* FREE */
-void	*free_dblstrarr(char **strarr);
-void	*free_data(t_data *data);
-void	error_message(void);
+// void	*free_dblstrarr(char **strarr);
+// void	*free_data(t_data *data);
+void	error_message(char *message);
 /* PATH */
 char	**get_paths(char **env);
 char	**check_cmd_full_path(t_data *data, char **cmd_args);
 /* STR ARRAYS */
 void	arrstr_print(char **arr);
+int		arrstr_len(char **arr);
 #endif

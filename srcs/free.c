@@ -12,7 +12,7 @@
 
 #include "pipex.h"
 
-void	*free_dblstrarr(char **strarr)
+/*void	*free_dblstrarr(char **strarr)
 {
 	while (*strarr)
 	{
@@ -20,7 +20,7 @@ void	*free_dblstrarr(char **strarr)
 		*strarr = NULL;
 		strarr++;
 	}
-	//free(strarr);
+	free(strarr);
 	return (NULL);
 }
 
@@ -39,4 +39,4 @@ void	*free_data(t_data *data)
 	free(data);
 	data = NULL;
 	return (data);
-}
+}*/
