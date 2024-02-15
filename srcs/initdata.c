@@ -51,11 +51,7 @@ t_data	*init_data(char **argv, char **env)
 	data->env = env;
 	data->paths = get_paths(env);
 	if (!data->paths)
-	{
-		free(data);
-		data = NULL;
-		return (data);
-	}
+		data->paths = ft_calloc(1, sizeof(char *));
 	data->cmd1_args = init_cmd_args(data, data->cmd1_args, argv[2]);
 	data->cmd2_args = init_cmd_args(data, data->cmd2_args, argv[3]);
 	data->infile = init_file_struct(data->infile, argv[1]);

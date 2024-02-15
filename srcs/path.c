@@ -15,8 +15,6 @@
 char	**get_paths(char **env)
 {
 	int		i;
-	char	*varenv;
-	int		equals_idx;
 	char	**paths;
 	char	*tmp;
 
@@ -25,16 +23,11 @@ char	**get_paths(char **env)
 		return (NULL);
 	while (env[i] && ft_strncmp(env[i], "PATH=", 5) != 0)
 		i++;
-	//TODO: gestionar que no encuentre PATH=
-	//si no hay PATH, tomamos 
-	if (i == arrstr_len(env))
+	if (!env[i])
 		return (NULL);
-	varenv = env[i];
-	equals_idx = ft_strchri(varenv, '=') + 1;
-	paths = ft_split((varenv + equals_idx), ':');
+	paths = ft_split((env[i] + 5), ':');
 	if (!paths)
 		return (NULL);
-	//aqui hacer return si PATH no está
 	i = -1;
 	while (paths[++i])
 	{
@@ -54,9 +47,7 @@ char	**check_cmd_full_path(t_data *data, char **cmd_args)
 
 	if (cmd_args[0] == '\0')
 		return (NULL);
-	if (ft_strncmp(cmd_args[0], "/", 1) == 0
-		|| ft_strncmp(cmd_args[0], "./", 2) == 0
-		|| ft_strncmp(cmd_args[0], "../", 3) == 0)
+	if (ft_strchr(cmd_args[0], '/') != NULL)
 		return (cmd_args);
 	i = -1;
 	while ((data->paths[++i]))

@@ -42,13 +42,15 @@
 *
 *	EX7 does not execute,"file.txt no such file or directory" no existe infile
 *	< file.txt ls | wc -l > outfile.txt
-*	./pipiex file.txt ls "wc -l" outfile.txt
+*	./pipex file.txt ls "wc -l" outfile.txt
 *	
 *
 *	EX9, los archivos son NULL, lo gestionan los hijos
+*	< "" ls | cat > ""
 *	./pipex "" ls cat ""
 *
 *	EX10, los ejecutables son NULL, los gestionan los hijos
+*	< infile.txt "" | "" > /dev/stdout
 *	./pipex infile.txt "" "" outfile.txt
 *
 *	EX11, siendo /wc (en ruta relativa) un archivo en lugar de un binario
