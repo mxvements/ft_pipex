@@ -55,6 +55,8 @@
 *
 *	EX11, siendo /wc (en ruta relativa) un archivo en lugar de un binario
 *		 ejecutable
+*	#!/bin/bash
+	ls
 *	< infile.txt /wc | cat > outfile.txt
 *	./pipex infile.txt /wc cat outfile.txt
 *		bash: /wc: No such file or directory
