@@ -1,0 +1,9 @@
+Makefile
+README.md
+infile.txt
+libft
+notes
+objs
+outfile.txt
+pipex
+srcs
